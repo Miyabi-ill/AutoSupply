@@ -47,6 +47,10 @@ namespace AutoSupply
         [DefaultValue(216000)]
         public int BuffTime { get; } = 216000;
 
+        [JsonProperty("heal_on_respawn")]
+        [DefaultValue(false)]
+        public bool HealOnRespawn { get; } = false;
+
         [JsonIgnore]
         public SupplySet DefaultSet { get; }
 
@@ -62,6 +66,7 @@ namespace AutoSupply
             {
                 Console.WriteLine(USE_DEFAULT_CONFIG_MESSAGE);
                 var settings = new SupplySettings(new List<SupplySet>(), new List<MapData>());
+                
                 return settings;
             }
             using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -74,7 +79,7 @@ namespace AutoSupply
         {
             using (var sr = new StreamReader(stream))
             {
-                return JsonConvert.DeserializeObject<SupplySettings>(sr.ReadToEnd(), new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore });
+                return JsonConvert.DeserializeObject<SupplySettings>(sr.ReadToEnd());
             }
         }
     }

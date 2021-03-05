@@ -5,8 +5,13 @@
     {
       "supply_name": "default",
       "available_team": "",
-      "max_hp": 100,
-      "max_mp": 20
+      "max_hp": 120,
+      "max_mp": 40,
+      "items": [
+        {
+          "item_name": "Magic Mirror"
+        }
+      ]
     },
     {
       "supply_name": "standard",
@@ -1029,8 +1034,7 @@
           "item_name": "Magic Mirror"
         }
       ],
-      "ammos": [
-      ],
+      "ammos": [],
       "armor": [
         {
           "item_name": "Titanium Headgear",

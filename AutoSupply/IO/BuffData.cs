@@ -29,7 +29,7 @@ namespace AutoSupply.IO
             var fields = type.GetFields();
             foreach (var field in fields)
             {
-                if (field.Name == "Count")
+                if (field.Name == "Count" || field.FieldType != typeof(int))
                 {
                     continue;
                 }

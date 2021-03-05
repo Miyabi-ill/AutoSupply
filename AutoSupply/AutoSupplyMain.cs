@@ -18,11 +18,11 @@ namespace AutoSupply
     public class AutoSupplyMain : TerrariaPlugin
     {
         public override string Author => "Miyabi";
-        public override string Description => "Auto supply";
+        public override string Description => "Auto supply to anonymous user.";
         public override string Name => "AutoSupply";
         public override Version Version => Assembly.GetExecutingAssembly().GetName().Version;
 
-        private static readonly string PVP_CONFIG_PATH = Path.Combine(TShock.SavePath, "SupplyConfig.json");
+        private static readonly string PVP_CONFIG_PATH = Path.GetFullPath(Path.Combine(TShock.SavePath, "SupplyConfig.json"));
 
         public AutoSupplyMain(Main game)
             : base(game)
@@ -32,6 +32,10 @@ namespace AutoSupply
             {
                 Console.WriteLine("Config is null.");
                 Settings = new SupplySettings(new List<SupplySet>(), new List<MapData>());
+            }
+            else
+            {
+                Console.WriteLine(string.Format("Supply config at {0} loaded.", PVP_CONFIG_PATH));
             }
 
             Instance = this;
@@ -44,6 +48,8 @@ namespace AutoSupply
         private MapData CurrentMap { get; set; }
 
         public Guid[] PlayerLastSupplyedId { get; } = new Guid[256];
+
+        private List<string> AlreadyDefaultSuppliedNames { get; } = new List<string>();
 
         public static void WriteLog(string message)
         {
@@ -59,8 +65,8 @@ namespace AutoSupply
             ServerApi.Hooks.ServerLeave.Register(this, OnLeave);
             GetDataHandlers.PlayerSpawn += OnSpawn;
 
-            TShockAPI.Commands.ChatCommands.Add(new Command("tshock.godmode", GMCodeCommand.GetGMCode, "gmcode"));
-            TShockAPI.Commands.ChatCommands.Add(new Command("tshock.canchat", SupplyCommand.SupplyChangeCommand, Settings.SupplyCommand));
+            TShockAPI.Commands.ChatCommands.Add(new Command(Permissions.godmode, GMCodeCommand.GetGMCode, "gmcode"));
+            TShockAPI.Commands.ChatCommands.Add(new Command(Permissions.canchat, SupplyCommand.SupplyChangeCommand, Settings.SupplyCommand));
         }
 
         protected override void Dispose(bool disposing)
@@ -109,6 +115,27 @@ namespace AutoSupply
 
         public bool SetBuffs(SupplySet set, int playerId)
         {
+            if (playerId < 0)
+            {
+                return false;
+            }
+
+            var player = TShock.Players[playerId].TPlayer;
+            
+            if (player == null)
+            {
+                return false;
+            }
+            
+            int length = Player.maxBuffs;
+            for (int i = 0; i < length; i++)
+            {
+                player.buffTime[i] = 0;
+                player.buffType[i] = 0;
+            }
+
+            NetMessage.SendData((int)PacketTypes.PlayerBuff, -1, -1, null, playerId);
+
             foreach (var buff in set.Buffs)
             {
                 buff.Parse();
@@ -124,6 +151,10 @@ namespace AutoSupply
             if (PlayerLastSupplyedId[playerIndex] != default)
             {
                 SetBuffs(Settings.SupplySets.First(x => x.ID == PlayerLastSupplyedId[playerIndex]), playerIndex);
+            }
+
+            if (Settings.HealOnRespawn)
+            {
                 TShock.Players[playerIndex].Heal(TShock.Players[playerIndex].TPlayer.statLifeMax);
             }
         }
@@ -133,14 +164,18 @@ namespace AutoSupply
             foreach (var player in TShock.Players)
             {
                 if (player == null
-                    || !player.Active)
+                    || !player.Active
+                    || player.State != 10)
                 {
                     continue;
                 }
 
-                if (PlayerLastSupplyedId[player.TPlayer.whoAmI] == default)
+                if (PlayerLastSupplyedId[player.TPlayer.whoAmI] == default
+                    && !player.HasPermission(Permissions.godmode)
+                    && !AlreadyDefaultSuppliedNames.Contains(player.Name))
                 {
                     SupplyCommand.Supply(player, Settings.DefaultSet);
+                    AlreadyDefaultSuppliedNames.Add(player.Name);
                 }
             }
         }
