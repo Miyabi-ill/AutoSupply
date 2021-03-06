@@ -139,7 +139,7 @@ namespace AutoSupply
             foreach (var buff in set.Buffs)
             {
                 buff.Parse();
-                TShock.Players[playerId].SetBuff(buff.ID, Settings.BuffTime);
+                TShock.Players[playerId].SetBuff(buff.ID, buff.BuffTime);
             }
 
             return true;
@@ -175,6 +175,7 @@ namespace AutoSupply
                     && !AlreadyDefaultSuppliedNames.Contains(player.Name))
                 {
                     SupplyCommand.Supply(player, Settings.DefaultSet);
+                    player.Heal(Settings.DefaultSet.HP);
                     AlreadyDefaultSuppliedNames.Add(player.Name);
                 }
             }

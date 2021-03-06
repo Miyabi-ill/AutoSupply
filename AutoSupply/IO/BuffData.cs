@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -21,6 +22,10 @@ namespace AutoSupply.IO
 
         [JsonIgnore]
         public int ID { get; private set; }
+
+        [JsonProperty("buff_time")]
+        [DefaultValue(216000)]
+        public int BuffTime { get; private set; }
 
         static BuffData()
         {
