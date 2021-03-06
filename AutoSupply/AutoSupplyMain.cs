@@ -150,12 +150,12 @@ namespace AutoSupply
             int playerIndex = args.PlayerId;
             if (PlayerLastSupplyedId[playerIndex] != default)
             {
-                SetBuffs(Settings.SupplySets.First(x => x.ID == PlayerLastSupplyedId[playerIndex]), playerIndex);
-            }
-
-            if (Settings.HealOnRespawn)
-            {
-                TShock.Players[playerIndex].Heal(TShock.Players[playerIndex].TPlayer.statLifeMax);
+                var supplySet = Settings.SupplySets.First(x => x.ID == PlayerLastSupplyedId[playerIndex]);
+                SetBuffs(supplySet, playerIndex);
+                if (supplySet.HealOnRespawn)
+                {
+                    args.Player.Heal(supplySet.HP);
+                }
             }
         }
 

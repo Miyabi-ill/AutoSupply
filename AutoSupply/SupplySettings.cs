@@ -47,10 +47,6 @@ namespace AutoSupply
         [DefaultValue(216000)]
         public int BuffTime { get; } = 216000;
 
-        [JsonProperty("heal_on_respawn")]
-        [DefaultValue(false)]
-        public bool HealOnRespawn { get; } = false;
-
         [JsonIgnore]
         public SupplySet DefaultSet { get; }
 
