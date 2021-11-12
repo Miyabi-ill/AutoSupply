@@ -175,7 +175,11 @@ namespace AutoSupply
                     && !AlreadyDefaultSuppliedNames.Contains(player.Name))
                 {
                     SupplyCommand.Supply(player, Settings.DefaultSet);
-                    player.Heal(Settings.DefaultSet.HP);
+                    if (Settings.DefaultSet?.HealOnRespawn == true)
+                    {
+                        player.Heal(Settings.DefaultSet.HP);
+                    }
+
                     AlreadyDefaultSuppliedNames.Add(player.Name);
                 }
             }

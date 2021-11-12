@@ -23,6 +23,11 @@ namespace AutoSupply
             DefaultSet = SupplySets?.FirstOrDefault(x => x.Name == "DEFAULT");
             DefaultMap = Maps?.FirstOrDefault(x => x.Name == "DEFAULT");
 
+            if (DefaultSet == null)
+            {
+                Console.WriteLine("AutoSupply Warning: Default set is not set.");
+            }
+
             GMSet = SupplySets?.FirstOrDefault(x => x.Name == GMSET_NAME);
 
             if (supply_sets != null)

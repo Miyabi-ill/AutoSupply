@@ -44,7 +44,7 @@ namespace AutoSupply.Commands
 
             string supplySelectErrorMsg = string.Format("Invalid supply name! Usage: {0}{1} <supply_name>\nAvailable supply list: {2}",
                 new object[] {
-                    TShock.Config.CommandSpecifier,
+                    TShock.Config.Settings.CommandSpecifier,
                     settings.SupplyCommand,
                     string.Join(", ", canChooseSet.Select(x => x.Name.ToLower(CultureInfo.InvariantCulture)))
                                                   .Replace(SupplySettings.GMSET_NAME.ToLowerInvariant(), string.Format(CultureInfo.InvariantCulture, "GM-{0:D6}", GMCodeCommand.GMCODE)),
