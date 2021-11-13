@@ -33,8 +33,7 @@ namespace AutoSupply
         public List<int> TeamIDs { get; private set; }
 
         [JsonProperty("heal_on_respawn")]
-        [DefaultValue(false)]
-        public bool HealOnRespawn { get; }
+        public bool HealOnRespawn { get; set; } = false;
 
         [JsonProperty("items")]
         public List<ItemData> Items { get; private set; } = new List<ItemData>();

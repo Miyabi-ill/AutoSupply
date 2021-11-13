@@ -155,6 +155,7 @@ namespace AutoSupply
                 if (supplySet.HealOnRespawn)
                 {
                     args.Player.Heal(supplySet.HP);
+                    Console.WriteLine("Player healed");
                 }
             }
         }
