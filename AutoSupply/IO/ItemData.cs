@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
@@ -30,6 +31,8 @@ namespace AutoSupply.IO
         [JsonIgnore]
         public int Prefix { get; private set; }
 
+        public int MaxItemCount { get; } = (short)typeof(Terraria.ID.ItemID).GetField("Count", BindingFlags.Public | BindingFlags.Static).GetValue(null);
+
         public void Parse()
         {
             if (!need_parse)
@@ -55,7 +58,7 @@ namespace AutoSupply.IO
 
                     //大文字に正規化してから比較する．
                     Main.player[Main.myPlayer] = new Player();
-                    for (int i = 1; i < Main.maxItemTypes; i++)
+                    for (int i = 1; i < MaxItemCount; i++)
                     {
                         item.netDefaults(i);
                         if (!string.IsNullOrWhiteSpace(item.Name))

@@ -67,7 +67,10 @@ namespace AutoSupply
             {
                 Console.WriteLine(USE_DEFAULT_CONFIG_MESSAGE);
                 var settings = new SupplySettings(new List<SupplySet>(), new List<MapData>());
-                
+                using (var sw = new StreamWriter(filePath))
+                {
+                    sw.Write(JsonConvert.SerializeObject(settings));
+                }
                 return settings;
             }
             using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
