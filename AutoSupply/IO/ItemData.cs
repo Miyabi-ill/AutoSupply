@@ -31,7 +31,7 @@ namespace AutoSupply.IO
         [JsonIgnore]
         public int Prefix { get; private set; }
 
-        public int MaxItemCount { get; } = (short)typeof(Terraria.ID.ItemID).GetField("Count", BindingFlags.Public | BindingFlags.Static).GetValue(null);
+        public static int MaxItemCount { get; } = (short)typeof(Terraria.ID.ItemID).GetField("Count", BindingFlags.Public | BindingFlags.Static).GetValue(null);
 
         public void Parse()
         {
