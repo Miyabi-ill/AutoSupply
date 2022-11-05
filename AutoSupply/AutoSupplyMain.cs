@@ -59,7 +59,7 @@ namespace AutoSupply
         public override void Initialize()
         {
             GeneralHooks.ReloadEvent += OnReload;
-            OTAPI.Hooks.World.IO.PostLoadWorld += SetCurrentMap;
+            On.Terraria.IO.WorldFile.LoadWorld += SetCurrentMap;
 
             ServerApi.Hooks.GamePostUpdate.Register(this, OnUpdate);
             ServerApi.Hooks.ServerLeave.Register(this, OnLeave);
@@ -74,7 +74,7 @@ namespace AutoSupply
             if (disposing)
             {
                 GeneralHooks.ReloadEvent -= OnReload;
-                OTAPI.Hooks.World.IO.PostLoadWorld -= SetCurrentMap;
+                On.Terraria.IO.WorldFile.LoadWorld -= SetCurrentMap;
 
                 ServerApi.Hooks.GamePostUpdate.Deregister(this, OnUpdate);
                 ServerApi.Hooks.ServerLeave.Deregister(this, OnLeave);
@@ -155,7 +155,7 @@ namespace AutoSupply
                 if (supplySet.HealOnRespawn)
                 {
                     args.Player.Heal(supplySet.HP);
-                    Console.WriteLine("Player healed");
+                    //Console.WriteLine("Player healed");
                 }
             }
         }
@@ -201,8 +201,9 @@ namespace AutoSupply
             }
         }
 
-        private void SetCurrentMap(bool loadFromCloud)
+        private void SetCurrentMap(On.Terraria.IO.WorldFile.orig_LoadWorld orig, bool loadFromCloud)
         {
+            orig.Invoke(loadFromCloud);
             CurrentMap = null;
             if (Settings == null)
             {
@@ -223,7 +224,6 @@ namespace AutoSupply
                     break;
                 }
             }
-
             if (CurrentMap == null)
             {
                 CurrentMap = Settings.DefaultMap;
