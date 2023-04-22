@@ -66,6 +66,7 @@ namespace AutoSupply
             GetDataHandlers.PlayerSpawn += OnSpawn;
 
             TShockAPI.Commands.ChatCommands.Add(new Command(Permissions.godmode, GMCodeCommand.GetGMCode, "gmcode"));
+            TShockAPI.Commands.ChatCommands.Add(new Command(Permissions.godmode, SwitchSupplyEnableCommand.SwitchSupply, "changesupplystatus"));
             TShockAPI.Commands.ChatCommands.Add(new Command(Permissions.canchat, SupplyCommand.SupplyChangeCommand, Settings.SupplyCommand));
         }
 

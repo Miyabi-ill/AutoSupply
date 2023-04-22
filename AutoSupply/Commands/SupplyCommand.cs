@@ -14,6 +14,12 @@ namespace AutoSupply.Commands
     {
         internal static void SupplyChangeCommand(CommandArgs args)
         {
+            if (!SwitchSupplyEnableCommand.IsSupplyEnabled)
+            {
+                args.Player.SendErrorMessage("You can\'t get supply. Supply is disabled.");
+                return;
+            }
+
             Player player = args.TPlayer;
             var settings = AutoSupplyMain.Instance.Settings;
 
